@@ -1,6 +1,8 @@
 class User < ApplicationRecord
 
-  validates :username, presence: true
+  validates :username, presence: true, uniqueness: true
+  validates_presence_of :password_confirmation, :on => :create
+  validates_confirmation_of :password
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
