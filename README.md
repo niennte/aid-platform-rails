@@ -66,6 +66,17 @@ To https://git.heroku.com/[heroku app name].git
 # initiate database:
 $ heroku run rails db:migrate
 
+# set up environment variables for the JWT signing secret
+$ rails secret
+[rails-generated-secret]
+
+
+dev:
+$ DEVISE_JWT_SECRET_KEY=[rails-generated-secret] rails server
+
+prod: 
+$ heroku config:set DEVISE_JWT_SECRET_KEY = [rails-generated-secret] 
+
 # activate the app
 $ heroku ps:scale web=1
 Scaling dynos... done, now running web at 1:Free
