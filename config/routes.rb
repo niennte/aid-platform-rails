@@ -10,6 +10,10 @@ Rails.application.routes.draw do
                  sessions: 'sessions',
                  registrations: 'registrations'
              }
-  get '/request', to: 'requests#index'
+
+  scope '/api/v1' do
+    resources :requests, path: :request
+  end
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
