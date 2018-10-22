@@ -1,16 +1,19 @@
 class RequestsController < ApplicationController
+  before_action :require_authorization
+  before_action :set_model, only: [:show, :update, :destroy]
+  before_action :require_ownership, only: [:update, :destroy]
+  before_action :apply_model_views, only: [:show, :update]
 
   # GET /request
   def index
-    @requests = Request.all
-    render json: @requests
+    @models = Request.all
+    render json: @models
   end
 
   # GET /request/1
   def show
-    @request = Request.find(params[:id])
-    if @request
-      render json: @request
+    if @model
+      render json: @model.public
     else
       render status: :not_found
     end
@@ -18,36 +21,45 @@ class RequestsController < ApplicationController
 
   # POST /request
   def create
-    @request = Request.new(request_params)
-    @request.user = current_user
-    if @request.save
-      render json: @request, status: :created, location: @request
+    @model = Request.new(query_params).extend(RequestView)
+    @model.user = current_user
+    if @model.save
+      render json: @model.public, status: :created
     else
-      render json: {errors: @request.errors, request: @request}, status: :unprocessable_entity
+      render_validation_error(@model)
     end
 
   end
 
   # PATCH/PUT /request/1
   def update
-    @request = Request.find(params[:id])
-    if @request.update(request_params)
-      render json: @request, status: :ok, location: @request
+    if @model.update(query_params)
+      render json: @model.public, status: :ok
     else
-      render json: @request.errors, status: :unprocessable_entity
+      render_validation_error(@model)
     end
 
   end
 
   # DELETE /request/1
   def destroy
-    @request = Request.find(params[:id])
-    @request.destroy
+    @model.destroy
     render status: :no_content
   end
 
-  def request_params
+  private
+
+  def query_params
     params.require(:request).permit(:id, :user_id, :category, :status, :title, :description, :address, :category)
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_model
+    @model = Request.find(params[:id])
+  end
+
+  def apply_model_views
+    @model.extend(RequestView)
   end
 
 end
