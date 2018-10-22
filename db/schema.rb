@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_21_004316) do
+ActiveRecord::Schema.define(version: 2018_10_22_152740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,16 @@ ActiveRecord::Schema.define(version: 2018_10_21_004316) do
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
+  create_table "responses", force: :cascade do |t|
+    t.bigint "request_id", null: false
+    t.bigint "user_id", null: false
+    t.text "message", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_responses_on_request_id"
+    t.index ["user_id"], name: "index_responses_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "username", default: "", null: false
@@ -62,4 +72,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_004316) do
   end
 
   add_foreign_key "requests", "users", on_delete: :cascade
+  add_foreign_key "responses", "requests", on_delete: :restrict
+  add_foreign_key "responses", "users", on_delete: :restrict
 end

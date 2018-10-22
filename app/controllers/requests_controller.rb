@@ -7,7 +7,6 @@ class RequestsController < ApplicationController
   end
 
   # GET /request/1
-  # GET /request/1.json
   def show
     @request = Request.find(params[:id])
     if @request
@@ -18,7 +17,6 @@ class RequestsController < ApplicationController
   end
 
   # POST /request
-  # POST /request.json
   def create
     @request = Request.new(request_params)
     @request.user = current_user
@@ -31,7 +29,6 @@ class RequestsController < ApplicationController
   end
 
   # PATCH/PUT /request/1
-  # PATCH/PUT /request/1.json
   def update
     @request = Request.find(params[:id])
     if @request.update(request_params)
@@ -43,7 +40,6 @@ class RequestsController < ApplicationController
   end
 
   # DELETE /request/1
-  # DELETE /request/1.json
   def destroy
     @request = Request.find(params[:id])
     @request.destroy
