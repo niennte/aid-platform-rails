@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_23_160708) do
+ActiveRecord::Schema.define(version: 2018_10_23_171344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,16 @@ ActiveRecord::Schema.define(version: 2018_10_23_160708) do
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "message_dispatches", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "message_id", null: false
+    t.boolean "is_read", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_message_dispatches_on_message_id"
+    t.index ["user_id"], name: "index_message_dispatches_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -93,6 +103,8 @@ ActiveRecord::Schema.define(version: 2018_10_23_160708) do
 
   add_foreign_key "fulfillments", "responses", on_delete: :cascade
   add_foreign_key "fulfillments", "users", on_delete: :restrict
+  add_foreign_key "message_dispatches", "messages"
+  add_foreign_key "message_dispatches", "users"
   add_foreign_key "messages", "users"
   add_foreign_key "requests", "users", on_delete: :cascade
   add_foreign_key "responses", "requests", on_delete: :restrict
