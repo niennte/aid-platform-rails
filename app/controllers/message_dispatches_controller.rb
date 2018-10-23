@@ -4,14 +4,16 @@ class MessageDispatchesController < ApplicationController
   before_action :require_ownership, only: [:update, :destroy, :show]
   before_action :apply_model_views, only: [:show, :update]
 
-  # GET /dispatch
+  # GET /inbox
   def index
-    @models = MessageDispatch.all
+    @models = MessageDispatch.with_message.all_for_user(user: current_user)
 
-    render json: @models
+    render json: (@models.map do |model|
+      model.extend(MessageDispatchView).list
+    end)
   end
 
-  # GET /dispatch/1
+  # GET /inbox/1
   def show
     if @model
       render json: @model.recursive
@@ -20,10 +22,12 @@ class MessageDispatchesController < ApplicationController
     end
   end
 
-  # POST /dispatch
+  # POST /inbox
   def create
-    @model = MessageDispatch.new(query_params).extend(MessageDispatchView)
-    @model.user = current_user
+    # create operates on two models and has unique set of params
+    create_params = params.require(:message).permit(:recipient_id, :body, :subject)
+    @model = MessageDispatcher.new(create_params)
+    @model.sender_id = current_user.id
 
     if @model.save
       render json: @model.public, status: :created
@@ -32,16 +36,18 @@ class MessageDispatchesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /dispatch/1
+  # PATCH/PUT /inbox/1
   def update
-    if @model.update(query_params)
+    # only update the status of being read
+    update_params = params.require(:message).permit(:is_read)
+    if @model.update(update_params)
       render json: @model.public
     else
       render_validation_error(@model)
     end
   end
 
-  # DELETE /dispatch/1
+  # DELETE /inbox/1
   def destroy
     @model.destroy
     render status: :no_content
@@ -49,17 +55,16 @@ class MessageDispatchesController < ApplicationController
 
   private
 
-  def query_params
-    params.require(:message).permit(:is_read)
-  end
-
-  # Use callbacks to share common setup or constraints between actions.
   def set_model
-    @model = MessageDispatch.find(params[:id])
+    @model = MessageDispatch.with_message.find(params[:id])
   end
 
   def apply_model_views
     @model.extend(MessageDispatchView)
+  end
+
+  def true?(param)
+    param.to_s == 'true'
   end
 
 end

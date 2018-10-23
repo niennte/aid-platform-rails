@@ -21,8 +21,8 @@ module MessageView
     {
         id: id,
         sender: {
-            senderId: user.id,
-            senderName: user.username
+            id: user.id,
+            userName: user.username
         },
         subject: subject,
         body: body,

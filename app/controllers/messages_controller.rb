@@ -6,15 +6,17 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
-    @models = Message.all
+    @models = Message.with_dispatch.all_for_user(user: current_user)
 
-    render json: @models
+    render json: (@models.map do |model|
+      model.extend(MessageWithDispatchView).list
+    end)
   end
 
   # GET /messages/1
   def show
-    if @model
-      render json: @model.public
+    if @model.extend(MessageWithDispatchView)
+      render json: @model.recursive
     else
       render status: :not_found
     end
@@ -55,7 +57,7 @@ class MessagesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_model
-    @model = Message.find(params[:id])
+    @model = Message.with_dispatch.find(params[:id])
   end
 
   def apply_model_views
