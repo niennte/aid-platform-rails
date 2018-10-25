@@ -9,9 +9,13 @@ module ResponseView
   def public
     {
         id: id,
+        user_id: user_id,
         requestId: request_id,
+        posted: created_at,
         message: message,
-        created: created_at
+        fulfillment: fulfillment ?
+            fulfillment.extend(FulfillmentView).list :
+            nil
     }
   end
 
@@ -19,11 +23,15 @@ module ResponseView
     {
         id: id,
         message: message,
-        request: {
-            title: request.title,
-            description: request.description
+        posted: created_at,
+        postedBy: {
+            id: user.id,
+            userName: user.username
         },
-        created: created_at
+        request: request.extend(RequestView).public,
+        fulfillment: fulfillment ?
+            fulfillment.extend(FulfillmentView).list :
+            nil
     }
   end
 end

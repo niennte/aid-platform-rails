@@ -46,7 +46,7 @@ module RequestView
         name: name,
         title: title,
         description: description,
-        address: full_address,
+        fullAddress: full_address,
         zip: postal_code,
         location: location,
         created: created_at,

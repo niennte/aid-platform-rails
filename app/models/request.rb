@@ -20,9 +20,9 @@ class Request < ApplicationRecord
   }
 
   belongs_to :user
+  has_many :responses
 
   # geocoder gem methods
-  # geocoded_by :address
   geocoded_by :address do |obj,results|
     if geo = results.first
       obj.full_address = geo.address
@@ -35,6 +35,30 @@ class Request < ApplicationRecord
   end
   after_validation :geocode, if: :address_changed?
   after_validation :coordinates_changed?
+
+  def self.all_for_user(user: required)
+    # created_at represents the time the request is posted
+    forUser(user.id).order('created_at desc')
+  end
+
+  def self.with_user_and_num_responses
+    select("#{table_name}.*, users.username as user_name, count(responses.id) as num_responses")
+        .joins(:responses)
+        .joins(:user)
+        .group("#{table_name}.id, users.id")
+  end
+
+  def self.all_active
+    where(status: :active)
+  end
+
+  def self.with_num_responses
+    select("#{table_name}.*, count(responses.id) as num_responses")
+        .joins(:responses)
+        .group("#{table_name}.id")
+  end
+
+  private
 
   # Validate whether the address has been successfully parsed.
   # courtesy of:

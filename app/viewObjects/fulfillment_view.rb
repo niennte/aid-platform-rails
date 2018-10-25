@@ -14,6 +14,15 @@ module FulfillmentView
     }
   end
 
+  def list
+    {
+        id: id,
+        response: response_id,
+        postedBy: user_id,
+        message: message
+    }
+  end
+
   def recursive
     {
         id: id,

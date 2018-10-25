@@ -17,6 +17,9 @@ class FulfillmentsController < ApplicationController
 
   # POST /fulfillment
   def create
+    # TODO: create should be called as
+    # - response#fulfill
+    # - request#fulfill
     @model = Fulfillment.new(query_params).extend(FulfillmentView)
     @model.user = current_user
 

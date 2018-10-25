@@ -1,19 +1,26 @@
 class ResponsesController < ApplicationController
   before_action :require_authorization
-  before_action :set_model, only: [:show, :update, :destroy]
+  before_action :set_model, only: [:update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
   before_action :apply_model_views, only: [:show, :update]
 
   # GET /response
   def index
-    @models = Response.all
-    render json: @models
+    @models = Response.with_fulfillment.all_for_user(user: current_user)
+    render json: (@models.map do |model|
+      model.extend(ResponseView).public
+    end)
   end
 
   # GET /response/1
   def show
+    @model = Response
+                 .with_fulfillment
+                 .with_request
+                 .with_user
+                 .find(params[:id]).extend(ResponseView)
     if @model
-      render json: @model.public
+      render json: @model.recursive
     else
       render status: :not_found
     end

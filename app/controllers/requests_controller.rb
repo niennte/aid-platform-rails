@@ -6,14 +6,26 @@ class RequestsController < ApplicationController
 
   # GET /request
   def index
-    @models = Request.all
-    render json: @models
+    @models = Request.with_num_responses.all_for_user(user: current_user)
+    render json: (@models.map do |model|
+      model.extend(RequestWithResponsesView).public
+    end)
+  end
+
+  # GET /request-active
+  def list
+    @models = Request.with_user_and_num_responses.all_active
+    render json: (@models.map do |model|
+      model.extend(RequestWithResponsesView).list
+    end)
   end
 
   # GET /request/1
   def show
+    # Needs another model?
     if @model
-      render json: @model.public
+      @model.extend(RequestWithResponsesView)
+      render json: @model.recursive
     else
       render status: :not_found
     end

@@ -23,6 +23,7 @@ class MessagesController < ApplicationController
   end
 
   # POST /messages
+  # could be used for saving drafts
   def create
     @model = Message.new(query_params).extend(MessageView)
     @model.user = current_user
@@ -35,6 +36,7 @@ class MessagesController < ApplicationController
   end
 
   # PATCH/PUT /messages/1
+  # could be used for menaging drafts
   def update
     if @model.update(query_params)
       render json: @model.public
@@ -44,6 +46,7 @@ class MessagesController < ApplicationController
   end
 
   # DELETE /messages/1
+  # could be used for deleting drafts
   def destroy
     @model.destroy
     render status: :no_content
