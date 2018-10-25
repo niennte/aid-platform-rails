@@ -23,9 +23,11 @@ class RequestsController < ApplicationController
   # GET /request/1
   def show
     # Needs another model?
+    @model = Request.with_user_and_num_responses.find(params[:id])
+    is_own = @model.user_id == current_user.id
     if @model
       @model.extend(RequestWithResponsesView)
-      render json: @model.recursive
+      render json: (is_own ? @model.recursive : @model.list)
     else
       render status: :not_found
     end
