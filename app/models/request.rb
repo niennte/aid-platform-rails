@@ -1,7 +1,7 @@
 class Request < ApplicationRecord
 
   enum category: [:one_time_task, :material_need]
-  enum status: [:active, :pending, :fulfilled]
+  enum status: [:active, :pending, :closed]
 
   validates :title, presence: true, length: { maximum: 100, message: 'cannot be longer than 100 characters.'}
 
@@ -21,6 +21,7 @@ class Request < ApplicationRecord
 
   belongs_to :user
   has_many :responses
+  has_one :fulfillment
 
   # geocoder gem methods
   geocoded_by :address do |obj,results|
@@ -42,10 +43,19 @@ class Request < ApplicationRecord
   end
 
   def self.with_user_and_num_responses
-    select("#{table_name}.*, users.username as user_name, count(responses.id) as num_responses")
-        .joins(:responses)
+    select("#{table_name}.*, users.username as user_name, fulfillments.id as is_fulfilled, count(responses.id) as num_responses")
         .joins(:user)
-        .group("#{table_name}.id, users.id")
+        .joins("LEFT OUTER JOIN responses ON #{table_name}.id = responses.request_id")
+        .joins("LEFT OUTER JOIN fulfillments ON #{table_name}.id = fulfillments.request_id")
+        .group("#{table_name}.id, users.id, fulfillments.id")
+  end
+
+  def self.with_user
+    withUser
+  end
+
+  def self.with_fulfillment
+    eager_load(:fulfillment)
   end
 
   def self.all_active

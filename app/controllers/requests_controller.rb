@@ -1,19 +1,19 @@
 class RequestsController < ApplicationController
   before_action :require_authorization
-  before_action :set_model, only: [:show, :update, :destroy]
+  before_action :set_model, only: [:update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
   before_action :apply_model_views, only: [:show, :update]
 
   # GET /request
-  def index
+  def list
     @models = Request.with_num_responses.all_for_user(user: current_user)
     render json: (@models.map do |model|
       model.extend(RequestWithResponsesView).public
     end)
   end
 
-  # GET /request-active
-  def list
+  # GET /request-own
+  def index
     @models = Request.with_user_and_num_responses.all_active
     render json: (@models.map do |model|
       model.extend(RequestWithResponsesView).list
@@ -23,11 +23,11 @@ class RequestsController < ApplicationController
   # GET /request/1
   def show
     # Needs another model?
-    @model = Request.with_user_and_num_responses.find(params[:id])
+    @model = Request.with_user.with_fulfillment.find(params[:id])
     is_own = @model.user_id == current_user.id
     if @model
       @model.extend(RequestWithResponsesView)
-      render json: (is_own ? @model.recursive : @model.list)
+      render json: (is_own ? @model.recursive : @model.summary)
     else
       render status: :not_found
     end

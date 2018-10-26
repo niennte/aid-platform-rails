@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_23_171344) do
+ActiveRecord::Schema.define(version: 2018_10_26_183139) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 2018_10_23_171344) do
     t.text "message", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "request_id", null: false
+    t.index ["request_id"], name: "index_fulfillments_on_request_id"
     t.index ["response_id"], name: "index_fulfillments_on_response_id"
     t.index ["user_id"], name: "index_fulfillments_on_user_id"
   end
@@ -74,6 +76,7 @@ ActiveRecord::Schema.define(version: 2018_10_23_171344) do
     t.text "message", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0, null: false
     t.index ["request_id"], name: "index_responses_on_request_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
@@ -101,6 +104,7 @@ ActiveRecord::Schema.define(version: 2018_10_23_171344) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "fulfillments", "requests", on_delete: :cascade
   add_foreign_key "fulfillments", "responses", on_delete: :cascade
   add_foreign_key "fulfillments", "users", on_delete: :restrict
   add_foreign_key "message_dispatches", "messages"

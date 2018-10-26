@@ -19,6 +19,19 @@ module ResponseView
     }
   end
 
+  def list
+    {
+        id: id,
+        user_id: user_id,
+        request: request.extend(RequestView).list,
+        posted: created_at,
+        message: message,
+        fulfillment: fulfillment ?
+            fulfillment.extend(FulfillmentView).list :
+            nil
+    }
+  end
+
   def recursive
     {
         id: id,

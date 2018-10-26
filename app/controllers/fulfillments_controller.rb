@@ -47,7 +47,7 @@ class FulfillmentsController < ApplicationController
   private
 
   def query_params
-    params.require(:fulfillment).permit(:response_id, :message)
+    params.require(:fulfillment).permit(:response_id, :request_id, :message)
   end
 
   # Use callbacks to share common setup or constraints between actions.

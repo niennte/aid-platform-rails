@@ -36,6 +36,19 @@ module RequestView
     }
   end
 
+  def list
+    {
+        id: id,
+        userId: user_id,
+        title: title,
+        description: description,
+        address: full_address,
+        posted: created_at,
+        type: category,
+        status: status
+    }
+  end
+
   def recursive
     {
         id: id,

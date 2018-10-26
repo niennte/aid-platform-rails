@@ -6,9 +6,12 @@ class ResponsesController < ApplicationController
 
   # GET /response
   def index
-    @models = Response.with_fulfillment.all_for_user(user: current_user)
+    @models = Response
+                  .with_fulfillment
+                  .with_request
+                  .all_for_user(user: current_user)
     render json: (@models.map do |model|
-      model.extend(ResponseView).public
+      model.extend(ResponseView).list
     end)
   end
 

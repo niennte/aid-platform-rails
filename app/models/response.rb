@@ -1,4 +1,7 @@
 class Response < ApplicationRecord
+
+  enum status: [:posted, :delivered]
+
   belongs_to :request
   belongs_to :user
 
