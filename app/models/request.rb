@@ -67,7 +67,7 @@ class Request < ApplicationRecord
 
   def self.with_num_responses
     select("#{table_name}.*, count(responses.id) as num_responses")
-        .joins(:responses)
+        .joins("LEFT OUTER JOIN responses ON #{table_name}.id = responses.request_id")
         .group("#{table_name}.id")
   end
 
