@@ -23,7 +23,7 @@ class FulfillmentsController < ApplicationController
       {
         response_id: @response.id,
         request_id: @response.request_id,
-        message: params[:fulfillment][:message],
+        message: query_params[:message],
         user: current_user
       }
     ).extend(FulfillmentView)
@@ -52,7 +52,7 @@ class FulfillmentsController < ApplicationController
   private
 
   def query_params
-    params.require(:fulfillment).permit(:response_id, :request_id, :message)
+    params.require(:fulfillment).permit(:response_id, :message)
   end
 
   # Use callbacks to share common setup or constraints between actions.
@@ -65,7 +65,7 @@ class FulfillmentsController < ApplicationController
   end
 
   def require_fulfillment_ownership
-    response_id = params[:fulfillment][:response_id]
+    response_id = query_params[:response_id]
     @response = Response.with_request.find(response_id)
     raise ApplicationController::ForbiddenError unless user_signed_in? && (@response.user == current_user || @response.request.user_id == current_user.id)
   end
