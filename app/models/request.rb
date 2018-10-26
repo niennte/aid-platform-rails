@@ -34,6 +34,9 @@ class Request < ApplicationRecord
       obj.lat = geo.latitude
     end
   end
+
+  # to validate address validity, call the service
+  # after model validation is complete
   after_validation :geocode, if: :address_changed?
   after_validation :coordinates_changed?
 
