@@ -4,15 +4,15 @@ class RequestsController < ApplicationController
   before_action :require_ownership, only: [:update, :destroy]
   before_action :apply_model_views, only: [:show, :update]
 
-  # GET /request
+  # GET /request-own
   def list
-    @models = Request.with_num_responses.all_for_user(user: current_user)
+    @models = Request.with_user_and_num_responses.all_for_user(user: current_user)
     render json: (@models.map do |model|
-      model.extend(RequestWithResponsesView).public
+      model.extend(RequestWithResponsesView).list
     end)
   end
 
-  # GET /request-own
+  # GET /request
   def index
     @models = Request.with_user_and_num_responses.all_active
     render json: (@models.map do |model|
