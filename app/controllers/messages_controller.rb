@@ -55,7 +55,7 @@ class MessagesController < ApplicationController
   private
 
   def query_params
-    params.require(:message).permit(:user_id, :subject, :body)
+    params.require(:message).permit(:subject, :body)
   end
 
   # Use callbacks to share common setup or constraints between actions.

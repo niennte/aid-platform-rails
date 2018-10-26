@@ -64,7 +64,7 @@ class RequestsController < ApplicationController
   private
 
   def query_params
-    params.require(:request).permit(:id, :user_id, :category, :status, :title, :description, :address, :category)
+    params.require(:request).permit(:category, :status, :title, :description, :address, :category)
   end
 
   # Use callbacks to share common setup or constraints between actions.

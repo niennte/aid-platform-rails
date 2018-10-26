@@ -57,7 +57,7 @@ class ResponsesController < ApplicationController
   private
 
   def query_params
-    params.require(:response).permit(:id, :request_id, :user_id, :message)
+    params.require(:response).permit(:request_id, :message)
   end
 
   # Use callbacks to share common setup or constraints between actions.
