@@ -17,16 +17,12 @@ class FulfillmentsController < ApplicationController
 
   # POST /fulfillment
   def create
+    # verify that the user owns either response or request
     require_fulfillment_ownership
-    # TODO make transactional status update
-    @model = Fulfillment.new(
-      {
-        response_id: @response.id,
-        request_id: @response.request_id,
-        message: query_params[:message],
-        user: current_user
-      }
-    ).extend(FulfillmentView)
+    # in a transaction, create a Fulfillment record
+    # and update status of Request and Response
+    @model = FulfillmentPoster.new({response: @response, message: query_params[:message]})
+    @model.poster_id = current_user
 
     if @model.save
       render json: @model.public, status: :created
@@ -37,7 +33,8 @@ class FulfillmentsController < ApplicationController
 
   # PATCH/PUT /fulfillment/1
   def update
-    if @model.update(query_params)
+    update_params = params.require(:fulfillment).permit(:message)
+    if @model.update(update_params)
       render json: @model.public
     else
       render_validation_error(@model)
@@ -55,7 +52,6 @@ class FulfillmentsController < ApplicationController
     params.require(:fulfillment).permit(:response_id, :message)
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_model
     @model = Fulfillment.find(params[:id])
   end
