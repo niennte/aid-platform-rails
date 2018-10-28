@@ -42,8 +42,30 @@ class AsyncController
     # - send a message to the owner of the request, from system, with
     # # - upcoming date of suspension end
     sleep 3
+    push_request_suspend(response.request_id, Date.current)
     puts '******* ready to decide whether to activate'
   end
+
+  # async application of a business rule / policy
+  def response_destroy(response)
+    sleep 1
+    puts '******* response_destroy'
+    # execute a Query object / Service object
+    # - if status of a request is (pending),
+    # - if the number of responses from unique users
+    # - with the last response created later than 24 hours ago
+    # - is less than 5,
+    # // do nothing with the request status (that can only be changed by reactivate call)
+    # // ditto for request_push_activate
+    # - call request_push_unsuspend
+    # - send a message to the owner of the request, from system,
+    # # - that the request can now be reactivated
+    sleep 3
+    push_request_unsuspend(response.request_id)
+    puts '******* ready to decide whether to remove from suspension list'
+  end
+
+
 
   # this should be a normal controller sitting on requests
   def reactivate(request)
@@ -109,11 +131,18 @@ class AsyncController
   # if not in the suspended list, it CAN be republished
   # if suspended list is ignored, rules will still be enforced by the API
   # but this will take the unload off the API
-  def push_request_suspended(request, expiry)
+  def push_request_suspend(request_id, expiry)
     sleep 1
     puts '******* request_push_suspended'
     sleep 3
-    puts "******* pushed_suspended #{request.id}, #{expiry}"
+    puts "******* pushed_suspended #{request_id}, #{expiry}"
+  end
+
+  def push_request_unsuspend(request_id)
+    sleep 1
+    puts '******* request_push_unsuspend'
+    sleep 3
+    puts "******* pushed_unsuspend #{request_id}"
   end
 
   # stub

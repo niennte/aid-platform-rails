@@ -57,6 +57,7 @@ class ResponsesController < ApplicationController
   # DELETE /response/1
   def destroy
     @model.destroy
+    publish(:response_destroy, @model)
     render status: :no_content
   end
 
