@@ -1,0 +1,1 @@
+Wisper.subscribe(AsyncController.new, async: true)

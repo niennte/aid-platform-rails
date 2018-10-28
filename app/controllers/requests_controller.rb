@@ -1,4 +1,6 @@
 class RequestsController < ApplicationController
+  include Wisper::Publisher
+
   before_action :require_authorization
   before_action :set_model, only: [:update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
@@ -38,6 +40,7 @@ class RequestsController < ApplicationController
     @model = Request.new(query_params).extend(RequestView)
     @model.user = current_user
     if @model.save
+      publish(:request_create, @model)
       render json: @model.public, status: :created
     else
       render_validation_error(@model)
@@ -48,6 +51,7 @@ class RequestsController < ApplicationController
   # PATCH/PUT /request/1
   def update
     if @model.update(query_params)
+      publish(:request_update, @model)
       render json: @model.public, status: :ok
     else
       render_validation_error(@model)
@@ -58,6 +62,7 @@ class RequestsController < ApplicationController
   # DELETE /request/1
   def destroy
     @model.destroy
+    publish(:request_destroy, @model)
     render status: :no_content
   end
 

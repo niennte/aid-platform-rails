@@ -1,0 +1,145 @@
+# Listen to API controller events,
+# and process asynchronously
+# eg, apply data caching
+# or policy
+class AsyncController
+  def request_create(request)
+    sleep 5
+    puts "$$$$$$$ request_create #{request.id}"
+    push_request_activate(request)
+  end
+
+  def request_update(request)
+    sleep 5
+    puts '$$$$$$$ request_update'
+    if request.active?
+      push_request_activate(request)
+    else
+      push_request_deactivate(request)
+    end
+  end
+
+  def request_destroy(request)
+    sleep 5
+    puts '$$$$$$$ request_destroy'
+    push_request_deactivate(request)
+  end
+
+  # great having this as async!
+  # triggered by saving a response
+  # async application of a business rule / policy
+  def response_create(response)
+    sleep 1
+    puts '******* response_create'
+    # execute a Query object / Service object
+    # - if status of a request is (not closed),
+    # - if the number of responses from unique users
+    # - with the last response created later than 24 hours ago
+    # - is greater than 4,
+    # - change request status to pending
+    # - call request_push_deactivate
+    # - call request_push_suspended with expiry 24 hours later than the last response
+    # - send a message to the owner of the request, from system, with
+    # # - upcoming date of suspension end
+    sleep 3
+    puts '******* ready to decide whether to activate'
+  end
+
+  # this should be a normal controller sitting on requests
+  def reactivate(request)
+    # execute a Query object / Service object
+    # - if status of a request is (not closed),
+    # - select number of responses from unique users
+    # with last response created later than 24 hours ago
+    # is smaller than 5
+    # - change request status to active
+    # - return true
+    # - call request_push_activate
+    # //do nothing with suspension list (it expires anyway)
+    # - else return false and add to errors
+    # - upcoming date of suspension end
+    # (24 hours from the latest response)
+  end
+
+  def user_create
+    # increment redis users counter
+    push_user_incr
+  end
+
+  def user_destroy
+    # decrement redis users counter
+    push_user_decr
+  end
+
+  def fulfillment_create
+    # increment redis fulfillments counter
+    push_fulfillment_incr
+  end
+
+  def fulfillment_destroy
+    # decrement redis fulfillments counter
+    push_fulfillment_decr
+  end
+
+  private
+
+  # TODO: Redis push methods should go into own class
+  # pushing to the "redis geo list":
+  # geo list is a flat snapshot of the current state of the database
+  # with geospacial attributes;
+  # redis geospacial queries will take a significant
+  # chunk of the heavy lifting
+  # off the API and Postgre
+  def push_request_activate(request)
+    sleep 1
+    puts '******* request_activate'
+    sleep 3
+    puts "******* pushed_activated #{request.id}"
+  end
+
+  # remove from the "redis geo list"
+  def push_request_deactivate(request)
+    sleep 1
+    puts '******* pushing_deactivate'
+    sleep 3
+    puts "******* pushed_deactivated #{request.id}"
+  end
+
+  # used to determine by front end if a pending request can be republished
+  # if not in the suspended list, it CAN be republished
+  # if suspended list is ignored, rules will still be enforced by the API
+  # but this will take the unload off the API
+  def push_request_suspended(request, expiry)
+    sleep 1
+    puts '******* request_push_suspended'
+    sleep 3
+    puts "******* pushed_suspended #{request.id}, #{expiry}"
+  end
+
+  # stub
+  def push_user_incr
+    # increment redis users counter
+  end
+
+  # stub
+  def push_user_decr
+    # decrement redis users counter
+  end
+
+  # stub
+  def push_fulfillment_incr
+    # increment redis fulfillments counter
+  end
+
+  # stub
+  def push_fulfillment_decr
+    # decrement redis fulfillments counter
+  end
+
+  # TODO add a sync resource / sync all job trigerrable from the API
+  # eg POST /sync/[resource] #sync
+  # GET /sync/[resource] # dry run
+  # - in this case, no reason to execute asynchronously,
+  # so this Redis Client should definitely be separate
+
+end

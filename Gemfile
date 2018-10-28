@@ -32,8 +32,12 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'devise-jwt'
 
-# Geo
+# Geocoding web service
 gem 'geocoder'
+
+# Publish/subscribe with Wisper
+# Concurrency/multithreading with Celluloid
+gem 'wisper-celluloid'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
