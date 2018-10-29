@@ -153,11 +153,13 @@ class AsyncController
   # stub
   def push_user_incr
     # increment redis users counter
+    @redis_client.push_user_incr
   end
 
   # stub
   def push_user_decr
     # decrement redis users counter
+    @redis_client.push_user_decr
   end
 
   # stub

@@ -43,11 +43,13 @@ class RedisClient
   # stub
   def push_user_incr
     # increment redis users counter
+    $redis.incr('members')
   end
 
   # stub
   def push_user_decr
     # decrement redis users counter
+    $redis.decr('members')
   end
 
   # stub
