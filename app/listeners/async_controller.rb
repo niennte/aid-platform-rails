@@ -9,15 +9,13 @@ class AsyncController
   end
 
   def request_create(request)
-    sleep 5
     puts "$$$$$$$ request_create #{request[:id]}"
     push_request_activate(request)
   end
 
   def request_update(request)
-    sleep 5
-    puts '$$$$$$$ request_update'
-    if request[:status] == :active?
+    puts "$$$$$$$ request_update #{request[:id]}"
+    if request[:status] == "active"
       push_request_activate(request)
     else
       push_request_deactivate(request)
@@ -25,7 +23,6 @@ class AsyncController
   end
 
   def request_destroy(request)
-    sleep 5
     puts '$$$$$$$ request_destroy'
     push_request_deactivate(request)
   end
@@ -110,26 +107,20 @@ class AsyncController
 
   private
 
-  # TODO: Redis push methods should go into own class
-  # pushing to the "redis geo list":
+  # pushing "activated" requests to the "redis geo list":
   # geo list is a flat snapshot of the current state of the database
   # with geospacial attributes;
   # redis geospacial queries will take a significant
   # chunk of the heavy lifting
   # off the API and Postgre
   def push_request_activate(request)
-    sleep 1
-    puts '******* request_activate'
-    sleep 3
-    puts "******* pushed_activated #{request[:id]}"
+    # active request geolocation and lookup
+    @redis_client.push_request_activate(request)
   end
 
   # remove from the "redis geo list"
   def push_request_deactivate(request)
-    sleep 1
-    puts '******* pushing_deactivate'
-    sleep 3
-    puts "******* pushed_deactivated #{request[:id]}"
+    @redis_client.push_request_deactivate(request)
   end
 
   # used to determine by front end if a pending request can be republished

@@ -8,18 +8,46 @@ class RedisClient
   # chunk of the heavy lifting
   # off the API and Postgre
   def push_request_activate(request)
-    sleep 1
-    puts '******* request_activate'
-    sleep 3
-    puts "******* pushed_activated #{request.id}"
+    $redis.geoadd(
+        'requests:locations',
+        request[:location][:lng],
+        request[:location][:lat],
+        request[:name],
+    )
+    # active request quick lookup
+    # $redis.hmset(
+    #     "requests:data:request:#{request[:name]}",
+    #     'type',
+    #     request[:category],
+    #     'userId',
+    #     request[:user][:userId],
+    #     'userName',
+    #     request[:user][:userName],
+    #     'lat',
+    #     request[:location][:lat],
+    #     'lng',
+    #     request[:location][:lng],
+    #     'title',
+    #     request[:title],
+    #     'description',
+    #     request[:description],
+    #     'address',
+    #     request[:fullAddress],
+    #     'city',
+    #     request[:city],
+    #     'postalCode',
+    #     request[:postalCode],
+    #     'country',
+    #     request[:country]
+    # )
   end
 
   # remove from the "redis geo list"
   def push_request_deactivate(request)
-    sleep 1
-    puts '******* pushing_deactivate'
-    sleep 3
-    puts "******* pushed_deactivated #{request.id}"
+    $redis.zrem(
+      'requests:locations',
+      request[:name]
+    )
   end
 
   # used to determine by front end if a pending request can be republished

@@ -5,7 +5,7 @@ class RequestsController < ApplicationController
   before_action :require_authorization
   before_action :set_model, only: [:update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
-  before_action :apply_model_views, only: [:show, :update]
+  before_action :apply_model_views, only: [:show, :update, :destroy]
 
   # GET /request-own
   def list
@@ -42,7 +42,7 @@ class RequestsController < ApplicationController
     @model.user = current_user
     if @model.save
       publish(:request_create, @model.async)
-      render json: @model.public, status: :created
+      render json: @model.recursive, status: :created
     else
       render_validation_error(@model)
     end

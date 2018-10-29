@@ -38,7 +38,7 @@ module RequestView
 
   # use in async threads
   def async
-    public.deep_dup
+    recursive.deep_dup
   end
 
   def list
