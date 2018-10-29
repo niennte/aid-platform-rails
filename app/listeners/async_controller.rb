@@ -3,16 +3,21 @@
 # eg, apply data caching
 # or policy
 class AsyncController
+
+  def initialize
+    @redis_client = RedisClient.new
+  end
+
   def request_create(request)
     sleep 5
-    puts "$$$$$$$ request_create #{request.id}"
+    puts "$$$$$$$ request_create #{request[:id]}"
     push_request_activate(request)
   end
 
   def request_update(request)
     sleep 5
     puts '$$$$$$$ request_update'
-    if request.active?
+    if request[:status] == :active?
       push_request_activate(request)
     else
       push_request_deactivate(request)
@@ -42,7 +47,7 @@ class AsyncController
     # - send a message to the owner of the request, from system, with
     # # - upcoming date of suspension end
     sleep 3
-    push_request_suspend(response.request_id, Date.current)
+    push_request_suspend(response[:request_id], Date.current)
     puts '******* ready to decide whether to activate'
   end
 
@@ -61,7 +66,7 @@ class AsyncController
     # - send a message to the owner of the request, from system,
     # # - that the request can now be reactivated
     sleep 3
-    push_request_unsuspend(response.request_id)
+    push_request_unsuspend(response[:request_id])
     puts '******* ready to decide whether to remove from suspension list'
   end
 
@@ -116,7 +121,7 @@ class AsyncController
     sleep 1
     puts '******* request_activate'
     sleep 3
-    puts "******* pushed_activated #{request.id}"
+    puts "******* pushed_activated #{request[:id]}"
   end
 
   # remove from the "redis geo list"
@@ -124,7 +129,7 @@ class AsyncController
     sleep 1
     puts '******* pushing_deactivate'
     sleep 3
-    puts "******* pushed_deactivated #{request.id}"
+    puts "******* pushed_deactivated #{request[:id]}"
   end
 
   # used to determine by front end if a pending request can be republished
@@ -158,11 +163,13 @@ class AsyncController
   # stub
   def push_fulfillment_incr
     # increment redis fulfillments counter
+    @redis_client.push_fulfillment_incr
   end
 
   # stub
   def push_fulfillment_decr
     # decrement redis fulfillments counter
+    @redis_client.push_fulfillment_decr
   end
 
   # TODO add a sync resource / sync all job trigerrable from the API

@@ -36,6 +36,11 @@ module RequestView
     }
   end
 
+  # use in async threads
+  def async
+    public.deep_dup
+  end
+
   def list
     {
         id: id,

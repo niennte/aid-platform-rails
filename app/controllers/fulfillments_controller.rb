@@ -1,4 +1,7 @@
 class FulfillmentsController < ApplicationController
+  include Wisper::Publisher
+  subscribe(AsyncController.new, async: true)
+
   before_action :require_authorization
   before_action :set_model, only: [:show, :update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
@@ -25,6 +28,7 @@ class FulfillmentsController < ApplicationController
     @model.poster_id = current_user
 
     if @model.save
+      publish :fulfillment_create
       render json: @model.public, status: :created
     else
       render_validation_error(@model)
@@ -43,6 +47,7 @@ class FulfillmentsController < ApplicationController
 
   # DELETE /fulfillment/1
   def destroy
+    publish :fulfillment_destroy
     @model.destroy
   end
 
