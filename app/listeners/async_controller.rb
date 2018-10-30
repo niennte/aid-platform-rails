@@ -95,6 +95,15 @@ class AsyncController
     push_user_decr
   end
 
+  # per user message counter of unread messages
+  def inbox_unread_add(user_id)
+    push_user_message_incr(user_id)
+  end
+
+  def inbox_unread_remove(user_id)
+    push_user_message_decr(user_id)
+  end
+
   def fulfillment_create
     # increment redis fulfillments counter
     push_fulfillment_incr
@@ -141,27 +150,36 @@ class AsyncController
     puts "******* pushed_unsuspend #{request_id}"
   end
 
-  # stub
+  # per user message counter
+  def push_user_message_incr(user_id)
+    # increment redis users counter
+    @redis_client.push_user_message_incr(user_id)
+  end
+
+  def push_user_message_decr(user_id)
+    # decrement redis users counter
+    @redis_client.push_user_message_decr(user_id)
+  end
+
+  # registered user counter
   def push_user_incr
     # increment redis users counter
     @redis_client.push_user_incr
   end
 
-  # stub
   def push_user_decr
     # decrement redis users counter
     @redis_client.push_user_decr
   end
 
-  # stub
   def push_fulfillment_incr
-    # increment redis fulfillments counter
+    # increment redis fulfilled request counter
     @redis_client.push_fulfillment_incr
   end
 
-  # stub
+  # fulfilled request counter
   def push_fulfillment_decr
-    # decrement redis fulfillments counter
+    # decrement redis fulfilled requests counter
     @redis_client.push_fulfillment_decr
   end
 

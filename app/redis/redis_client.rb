@@ -50,7 +50,7 @@ class RedisClient
     )
   end
 
-  # used to determine by front end if a pending request can be republished
+  # used to determine by frontend if a pending request can be republished
   # if not in the suspended list, it CAN be republished
   # if suspended list is ignored, rules will still be enforced by the API
   # but this will take the unload off the API
@@ -68,31 +68,35 @@ class RedisClient
     puts "******* pushed_unsuspend #{request_id}"
   end
 
-  # stub
+  def push_user_message_incr(user_id)
+    $redis.incr("messages:user:#{user_id}")
+  end
+
+  def push_user_message_decr(user_id)
+    $redis.decr("messages:user:#{user_id}")
+  end
+
   def push_user_incr
     # increment redis users counter
     $redis.incr('members')
   end
 
-  # stub
   def push_user_decr
     # decrement redis users counter
     $redis.decr('members')
   end
 
-  # stub
   def push_fulfillment_incr
     # increment redis fulfillments counter
     $redis.incr('fulfilled')
   end
 
-  # stub
   def push_fulfillment_decr
     # decrement redis fulfillments counter
     $redis.decr('fulfilled')
   end
 
-  # TODO add a sync resource / sync all job trigerrable from the API
+  # TODO add a sync resource / sync all job triggerable from the API
   # eg POST /sync/[resource] #sync
   # GET /sync/[resource] # dry run
   # - in this case, no reason to execute asynchronously,

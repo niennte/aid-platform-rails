@@ -17,6 +17,10 @@ module MessageDispatchView
     }
   end
 
+  def async
+    public.deep_dup
+  end
+
   def list
     {
         id: id,

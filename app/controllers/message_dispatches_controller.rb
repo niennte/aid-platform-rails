@@ -1,4 +1,7 @@
 class MessageDispatchesController < ApplicationController
+  include Wisper::Publisher
+  subscribe(AsyncController.new, async: true)
+
   before_action :require_authorization
   before_action :set_model, only: [:show, :update, :destroy]
   before_action :require_ownership, only: [:update, :destroy, :show]
@@ -30,6 +33,8 @@ class MessageDispatchesController < ApplicationController
     @model.sender_id = current_user.id
 
     if @model.save
+      # inbox_new_add
+      publish(:inbox_unread_add, @model.recipient_id)
       render json: @model.public, status: :created
     else
       render_validation_error(@model)
@@ -49,7 +54,11 @@ class MessageDispatchesController < ApplicationController
 
   # DELETE /inbox/1
   def destroy
+    is_read = @model.is_read
     @model.destroy
+    unless is_read
+      publish(:inbox_unread_remove, @model.user_id)
+    end
     render status: :no_content
   end
 

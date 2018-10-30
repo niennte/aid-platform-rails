@@ -1,4 +1,13 @@
 class MessageDispatch < ApplicationRecord
+  include Wisper::Publisher
+  subscribe(AsyncController.new, async: true)
+
+  # only call callback if the is_read attribute has actually been updated
+  after_commit :publish_inbox_update,
+     if: proc { |record|
+       record.previous_changes.key?(:is_read) &&
+           record.previous_changes[:is_read].first != record.previous_changes[:is_read].last
+     }
 
   validates :user, presence: true
   validates :message, presence: true
@@ -23,4 +32,13 @@ messages.body as message_body")
         .joins('INNER JOIN users ON messages.user_id = users.id')
   end
 
+  private
+
+  def publish_inbox_update
+    if is_read
+      publish(:inbox_unread_remove, user_id)
+    else
+      publish(:inbox_unread_add, user_id)
+    end
+  end
 end
