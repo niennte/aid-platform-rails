@@ -2,7 +2,7 @@
 # and process asynchronously
 # eg, apply data caching
 # or policy
-class AsyncController
+class JobDispatcher
 
   def initialize
     @redis_client = RedisClient.new
@@ -26,28 +26,7 @@ class AsyncController
     puts '$$$$$$$ request_destroy'
     push_request_deactivate(request)
   end
-
-  # great having this as async!
-  # triggered by saving a response
-  # async application of a business rule / policy
-  def response_create(response)
-    sleep 1
-    puts '******* response_create'
-    # execute a Query object / Service object
-    # - if status of a request is (not closed),
-    # - if the number of responses from unique users
-    # - with the last response created later than 24 hours ago
-    # - is greater than 4,
-    # - change request status to pending
-    # - call request_push_deactivate
-    # - call request_push_suspended with expiry 24 hours later than the last response
-    # - send a message to the owner of the request, from system, with
-    # # - upcoming date of suspension end
-    sleep 3
-    push_request_suspend(response[:request_id], Date.current)
-    puts '******* ready to decide whether to activate'
-  end
-
+  
   # async application of a business rule / policy
   def response_destroy(response)
     sleep 1

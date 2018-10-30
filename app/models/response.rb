@@ -1,4 +1,8 @@
 class Response < ApplicationRecord
+  include Wisper::Publisher
+  subscribe(RequestStatusPolicy.new, async: false)
+  # call service to update request status if rules apply
+  after_commit :apply_request_policy, on: :create
 
   enum status: [:posted, :delivered]
 
@@ -25,5 +29,11 @@ class Response < ApplicationRecord
   def self.all_for_user(user: required)
     # created_at represents the time the request is posted
     forUser(user.id).order("#{table_name}.created_at desc")
+  end
+
+  private
+
+  def apply_request_policy
+    publish(:apply_request_policy, request_id)
   end
 end

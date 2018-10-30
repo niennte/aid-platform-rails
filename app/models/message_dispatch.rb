@@ -1,6 +1,6 @@
 class MessageDispatch < ApplicationRecord
   include Wisper::Publisher
-  subscribe(AsyncController.new, async: true)
+  subscribe(JobDispatcher.new, async: true)
 
   # only call callback if the is_read attribute has actually been updated
   after_commit :publish_inbox_update,

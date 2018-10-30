@@ -1,7 +1,4 @@
 class ResponsesController < ApplicationController
-  include Wisper::Publisher
-  subscribe(AsyncController.new, async: true)
-
   before_action :require_authorization
   before_action :set_model, only: [:update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
@@ -37,7 +34,6 @@ class ResponsesController < ApplicationController
     @model = Response.new(query_params).extend(ResponseView)
     @model.user = current_user
     if @model.save
-      publish(:response_create, @model.async)
       render json: @model.public, status: :created
     else
       render_validation_error(@model)
@@ -58,7 +54,6 @@ class ResponsesController < ApplicationController
   # DELETE /response/1
   def destroy
     @model.destroy
-    publish(:response_destroy, @model.async)
     render status: :no_content
   end
 

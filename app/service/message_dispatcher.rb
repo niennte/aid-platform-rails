@@ -3,6 +3,7 @@ class MessageDispatcher
 
   def initialize(params = {})
     @recipient_id = params[:recipient_id]
+    @sender_id = params[:sender_id]
     @subject = params[:subject]
     @body = params[:body]
     @errors = {}
@@ -11,9 +12,9 @@ class MessageDispatcher
   def save
     # Save Message and MessageDispatch in a transaction
     ActiveRecord::Base.transaction do
-      @message = Message.new(user_id: sender_id, subject: subject, body: body)
+      @message = Message.new({user_id: sender_id, subject: subject, body: body})
       if @message.save
-        @dispatch = MessageDispatch.new(message_id: @message.id, user_id: recipient_id)
+        @dispatch = MessageDispatch.new({message_id: @message.id, user_id: recipient_id})
         unless @dispatch.save
           @errors[:recipient_id] = @dispatch.errors[:user]
         end
