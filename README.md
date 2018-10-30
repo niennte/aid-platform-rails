@@ -83,7 +83,11 @@ Scaling dynos... done, now running web at 1:Free
 
 ```
 
-
+#
+Setup Redis notifications for the [interesting events (all of the keyspace)](https://redis.io/topics/notifications):
+```
+config set notify-keyspace-events KA
+```
 #
 
 
