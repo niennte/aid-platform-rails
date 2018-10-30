@@ -1,6 +1,6 @@
 class Response < ApplicationRecord
   include Wisper::Publisher
-  subscribe(RequestStatusPolicy.new, async: true)
+  subscribe(RequestStatusPolicy.new, async: Rails.env.production?)
   # publish response creation
   after_commit :apply_request_policy, on: :create
 

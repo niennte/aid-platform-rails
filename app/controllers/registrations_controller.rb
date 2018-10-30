@@ -2,7 +2,7 @@
 # so as to be able to customize it
 class RegistrationsController < Devise::RegistrationsController
   include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: true)
+  subscribe(JobDispatcher.new, async: Rails.env.production?)
 
   respond_to :json
 

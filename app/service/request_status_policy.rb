@@ -5,7 +5,7 @@
 # the requests becomes deactivated for 24 hours
 class RequestStatusPolicy
   include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: true)
+  subscribe(JobDispatcher.new, async: Rails.env.production?)
 
   attr_reader :errors
 

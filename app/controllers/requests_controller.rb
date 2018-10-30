@@ -1,6 +1,6 @@
 class RequestsController < ApplicationController
   include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: true)
+  subscribe(JobDispatcher.new, async: Rails.env.production?)
 
   before_action :require_authorization
   before_action :set_model, only: [:update, :destroy, :activate]
