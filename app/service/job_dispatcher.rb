@@ -26,7 +26,7 @@ class JobDispatcher
     puts '$$$$$$$ request_destroy'
     push_request_deactivate(request)
   end
-  
+
   # async application of a business rule / policy
   def response_destroy(response)
     sleep 1

@@ -1,7 +1,7 @@
 class Response < ApplicationRecord
   include Wisper::Publisher
   subscribe(RequestStatusPolicy.new, async: false)
-  # call service to update request status if rules apply
+  # publish response creation
   after_commit :apply_request_policy, on: :create
 
   enum status: [:posted, :delivered]
@@ -34,6 +34,7 @@ class Response < ApplicationRecord
   private
 
   def apply_request_policy
-    publish(:apply_request_policy, request_id)
+    # call the dispatcher method to update request status if rules apply
+    publish(:apply_to_new_response, request_id)
   end
 end

@@ -3,9 +3,9 @@ class RequestsController < ApplicationController
   subscribe(JobDispatcher.new, async: true)
 
   before_action :require_authorization
-  before_action :set_model, only: [:update, :destroy]
-  before_action :require_ownership, only: [:update, :destroy]
-  before_action :apply_model_views, only: [:show, :update, :destroy]
+  before_action :set_model, only: [:update, :destroy, :reactivate]
+  before_action :require_ownership, only: [:update, :destroy, :reactivate]
+  before_action :apply_model_views, only: [:show, :update, :destroy, :reactivate]
 
   # GET /request-own
   def list
@@ -13,6 +13,17 @@ class RequestsController < ApplicationController
     render json: (@models.map do |model|
       model.extend(RequestWithResponsesView).list
     end)
+  end
+
+  # GET /reactivate/1
+  def reactivate
+    request_activator = RequestActivator.new(@model)
+    if request_activator.save
+      publish(:request_update, request_activator.async)
+      render json: request_activator.public, status: :ok
+    else
+      render_validation_error(request_activator)
+    end
   end
 
   # GET /request

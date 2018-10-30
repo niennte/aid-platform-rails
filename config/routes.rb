@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   scope '/api/v1' do
     resources :requests, path: :request
+    get '/reactivate/:id', to: 'requests#reactivate'
     get '/request-own', to: 'requests#list'
     resources :responses, path: :response
     resources :fulfillments, path: :fulfillment
