@@ -3,9 +3,9 @@ class RequestsController < ApplicationController
   subscribe(JobDispatcher.new, async: true)
 
   before_action :require_authorization
-  before_action :set_model, only: [:update, :destroy, :reactivate]
-  before_action :require_ownership, only: [:update, :destroy, :reactivate]
-  before_action :apply_model_views, only: [:show, :update, :destroy, :reactivate]
+  before_action :set_model, only: [:update, :destroy, :activate]
+  before_action :require_ownership, only: [:update, :destroy, :activate]
+  before_action :apply_model_views, only: [:show, :update, :destroy, :activate]
 
   # GET /request-own
   def list
@@ -15,8 +15,8 @@ class RequestsController < ApplicationController
     end)
   end
 
-  # GET /reactivate/1
-  def reactivate
+  # GET /activate/1
+  def activate
     request_activator = RequestActivator.new(@model)
     if request_activator.save
       publish(:request_update, request_activator.async)
@@ -81,7 +81,7 @@ class RequestsController < ApplicationController
   private
 
   def query_params
-    params.require(:request).permit(:category, :status, :title, :description, :address, :category)
+    params.require(:request).permit(:category, :title, :description, :address, :category)
   end
 
   # Use callbacks to share common setup or constraints between actions.

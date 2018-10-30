@@ -40,6 +40,10 @@ class FulfillmentPoster
     @fulfillment.extend(FulfillmentView).public
   end
 
+  def async
+    public.deep_dup
+  end
+
   def recursive
     @fulfillment.extend(FulfillmentView).recursive
   end

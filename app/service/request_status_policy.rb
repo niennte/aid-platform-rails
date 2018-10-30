@@ -3,7 +3,6 @@
 # from unique users
 # - when the 5th response is received,
 # the requests becomes deactivated for 24 hours
-
 class RequestStatusPolicy
   include Wisper::Publisher
   subscribe(JobDispatcher.new, async: true)
@@ -14,6 +13,8 @@ class RequestStatusPolicy
     @errors = {}
   end
 
+  # todo: refactor into should_deactivate? method
+  # todo: move logic to job dispatcher
   def apply_to_new_response(request_id)
     request = Request.find(request_id)
     unless request.closed?
@@ -31,15 +32,9 @@ class RequestStatusPolicy
         # publish event to add the request to the "suspended" Redis lookup
         publish(:push_request_suspend, reactivation_date)
         # inform the request poster
-        system_user = User.find_by username: 'AidPlatform'
-        message_dispatch = MessageDispatcher.new({
-          sender_id: system_user.id, # system user
-          recipient_id: request.user_id,
-          subject: 'Request received 5 responses!',
-          body: "
-Great, your request '#{request.title}' has received responses from 5 different volunteers. It is no longer public so as to give the volunteers the time to fulfill the request. If your request is not fulfilled by #{reactivation_date}, you can publish it again."
-        })
-        message_dispatch.save
+        UserNotificationDispatcher
+          .new(request.user_id)
+          .report_deactivation(reactivation_date, request.title)
       end
     end
   end
@@ -63,7 +58,7 @@ Great, your request '#{request.title}' has received responses from 5 different v
     is_activatable = distinct_responses.count < 5 || DateTime.current > last_response_date + 24.hours
     unless is_activatable
       @errors = {
-          latest_response_date: "Request can't reactivate before #{last_response_date + 24.hours}"
+        latest_response_date: "Request can't reactivate before #{last_response_date + 24.hours}"
       }
     end
     is_activatable

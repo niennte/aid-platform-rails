@@ -46,24 +46,6 @@ class JobDispatcher
     puts '******* ready to decide whether to remove from suspension list'
   end
 
-
-
-  # this should be a normal controller sitting on requests
-  def reactivate(request)
-    # execute a Query object / Service object
-    # - if status of a request is (not closed),
-    # - select number of responses from unique users
-    # with last response created later than 24 hours ago
-    # is smaller than 5
-    # - change request status to active
-    # - return true
-    # - call request_push_activate
-    # //do nothing with suspension list (it expires anyway)
-    # - else return false and add to errors
-    # - upcoming date of suspension end
-    # (24 hours from the latest response)
-  end
-
   def user_create
     # increment redis users counter
     push_user_incr
@@ -86,6 +68,24 @@ class JobDispatcher
   def fulfillment_create
     # increment redis fulfillments counter
     push_fulfillment_incr
+  end
+
+  def response_new_notify(response)
+    request = Request.find(response[:requestId])
+    UserNotificationDispatcher
+        .new(request.user_id)
+        .report_new_response(request.title)
+  end
+
+  def fulfillment_notify(fulfillment)
+    poster_id = Request.find(fulfillment[:requestId]).user_id
+    volunteer_id = Response.find(fulfillment[:responseId]).user_id
+    UserNotificationDispatcher
+      .new(poster_id)
+      .report_fulfilled(fulfillment[:requestId], fulfillment[:responseId])
+    UserNotificationDispatcher
+        .new(volunteer_id)
+        .report_fulfilled(fulfillment[:requestId], fulfillment[:responseId])
   end
 
   def fulfillment_destroy

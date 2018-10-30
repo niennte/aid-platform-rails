@@ -26,9 +26,9 @@ class FulfillmentsController < ApplicationController
     # and update status of Request and Response
     @model = FulfillmentPoster.new({response: @response, message: query_params[:message]})
     @model.poster_id = current_user
-
     if @model.save
       publish :fulfillment_create
+      publish(:fulfillment_notify, @model.async)
       render json: @model.public, status: :created
     else
       render_validation_error(@model)
