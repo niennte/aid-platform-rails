@@ -213,7 +213,7 @@ Devise.setup do |config|
 
   # When set to false, does not sign a user in automatically after their password is
   # reset. Defaults to true, so a user is signed in automatically after a reset.
-  # config.sign_in_after_reset_password = true
+  config.sign_in_after_reset_password = false
 
   # ==> Configuration for :encryptable
   # Allow you to use another hashing or encryption algorithm besides bcrypt (default).
@@ -294,7 +294,9 @@ Devise.setup do |config|
   config.jwt do |jwt|
     jwt.secret = ENV['DEVISE_JWT_SECRET_KEY'] # generate with rake secret
     jwt.dispatch_requests = [
-        ['POST', %r{^/login$}]
+        ['POST', %r{^/login$}], # issue token after successful sign in
+        ['PUT', %r{^/password$}], # sign in after password reset, per devise init
+        ['POST', %r{^/signup$}] # sign in user after creating the account, per devise
     ]
     jwt.revocation_requests = [
         ['DELETE', %r{^/logout$}]
