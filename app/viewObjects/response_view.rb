@@ -13,6 +13,7 @@ module ResponseView
         requestId: request_id,
         posted: created_at,
         message: message,
+        status: status,
         fulfillment: fulfillment ?
             fulfillment.extend(FulfillmentView).list :
             nil
@@ -31,6 +32,7 @@ module ResponseView
         request: request.extend(RequestView).list,
         posted: created_at,
         message: message,
+        status: status,
         fulfillment: fulfillment ?
             fulfillment.extend(FulfillmentView).list :
             nil
@@ -41,6 +43,7 @@ module ResponseView
     {
         id: id,
         message: message,
+        status: status,
         posted: created_at,
         postedBy: {
             id: user.id,
