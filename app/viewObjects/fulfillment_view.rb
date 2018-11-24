@@ -10,6 +10,7 @@ module FulfillmentView
         id: id,
         requestId: request_id,
         responseId: response_id,
+        posted: created_at,
         postedBy: user_id,
         message: message
     }
@@ -20,6 +21,7 @@ module FulfillmentView
         id: id,
         requestId: request_id,
         response: response_id,
+        posted: created_at,
         postedBy: user_id,
         message: message
     }
@@ -30,6 +32,7 @@ module FulfillmentView
         id: id,
         requestId: request,
         response: response,
+        posted: created_at,
         postedBy: user,
         message: message
     }
