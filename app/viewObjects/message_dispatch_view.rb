@@ -35,7 +35,8 @@ module MessageDispatchView
         received: created_at,
         isRead: is_read,
         readAt: is_read ? updated_at : nil,
-        subject: message_subject
+        subject: message_subject,
+        body: message_body
     }
   end
 
