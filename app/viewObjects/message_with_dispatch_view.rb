@@ -30,6 +30,7 @@ module MessageWithDispatchView
               userId: user_id
           },
           subject: subject,
+          body: body,
           sent: created_at,
           delivered: delivered,
           read: read
