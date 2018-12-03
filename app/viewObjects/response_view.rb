@@ -29,7 +29,7 @@ module ResponseView
     {
         id: id,
         user_id: user_id,
-        request: request.extend(RequestView).list,
+        request: request.extend(RequestView).public,
         posted: created_at,
         message: message,
         status: status,
