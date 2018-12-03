@@ -19,8 +19,9 @@ class Response < ApplicationRecord
   end
 
   def self.with_request
-    joins(:request).eager_load(:request)
+    joins(:request).eager_load([:request, {:request => :user}])
   end
+
 
   def self.with_user
     withUser
