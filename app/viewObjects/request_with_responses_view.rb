@@ -92,6 +92,7 @@ module RequestWithResponsesView
       name: name,
       title: title,
       description: description,
+      address: address,
       fullAddress: full_address,
       zip: postal_code,
       location: location,
