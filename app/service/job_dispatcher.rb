@@ -60,6 +60,16 @@ class JobDispatcher
     push_fulfillment_decr
   end
 
+  def response_create
+    # increment redis users counter
+    push_response_incr
+  end
+
+  def response_destroy
+    # decrement redis users counter
+    push_response_decr
+  end
+
 
   # Notifiers
 
@@ -122,6 +132,17 @@ class JobDispatcher
   def push_user_decr
     # decrement redis users counter
     @redis_client.push_user_decr
+  end
+
+  # response counter
+  def push_response_incr
+    # increment redis response counter
+    @redis_client.push_response_incr
+  end
+
+  def push_response_decr
+    # decrement redis response counter
+    @redis_client.push_response_decr
   end
 
   def push_fulfillment_incr

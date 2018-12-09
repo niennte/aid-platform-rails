@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/stympy/faker.git
+  revision: aca03bed6918ece830a62fd73085de5db20282b6
+  branch: master
+  specs:
+    faker (1.9.1)
+      i18n (>= 0.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -193,6 +201,7 @@ DEPENDENCIES
   byebug
   devise
   devise-jwt
+  faker!
   geocoder
   hirb
   listen (>= 3.0.5, < 3.2)

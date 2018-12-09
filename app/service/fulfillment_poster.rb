@@ -1,5 +1,8 @@
 # Transaction wrapper to post a request fulfillment
 class FulfillmentPoster
+  include Wisper::Publisher
+  subscribe(JobDispatcher.new, async: Rails.env.production?)
+
   attr_accessor :poster_id, :response, :message, :errors
 
   def initialize(params = {})
@@ -33,7 +36,12 @@ class FulfillmentPoster
         @errors = @fulfillment.errors.to_h
       end
     end
-    @errors.length == 0
+    success = @errors.length == 0
+    if success
+      publish :fulfillment_create
+      publish(:fulfillment_notify, async)
+    end
+    success
   end
 
   def public

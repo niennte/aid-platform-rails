@@ -1,7 +1,4 @@
 class FulfillmentsController < ApplicationController
-  include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: Rails.env.production?)
-
   before_action :require_authorization
   before_action :set_model, only: [:show, :update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
@@ -27,8 +24,6 @@ class FulfillmentsController < ApplicationController
     @model = FulfillmentPoster.new({response: @response, message: query_params[:message]})
     @model.poster_id = current_user
     if @model.save
-      publish :fulfillment_create
-      publish(:fulfillment_notify, @model.async)
       render json: @model.public, status: :created
     else
       render_validation_error(@model)
@@ -47,7 +42,6 @@ class FulfillmentsController < ApplicationController
 
   # DELETE /fulfillment/1
   def destroy
-    publish :fulfillment_destroy
     @model.destroy
   end
 

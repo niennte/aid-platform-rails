@@ -1,7 +1,4 @@
 class ResponsesController < ApplicationController
-  include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: Rails.env.production?)
-
   before_action :require_authorization
   before_action :set_model, only: [:update, :destroy]
   before_action :require_ownership, only: [:update, :destroy]
@@ -37,7 +34,6 @@ class ResponsesController < ApplicationController
     @model = Response.new(query_params).extend(ResponseView)
     @model.user = current_user
     if @model.save
-      publish(:response_new_notify, @model.async)
       render json: @model.public, status: :created
     else
       render_validation_error(@model)

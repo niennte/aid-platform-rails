@@ -1,7 +1,4 @@
 class RequestsController < ApplicationController
-  include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: Rails.env.production?)
-
   before_action :require_authorization
   before_action :set_model, only: [:update, :destroy, :activate]
   before_action :require_ownership, only: [:update, :destroy, :activate]
@@ -19,7 +16,6 @@ class RequestsController < ApplicationController
   def activate
     request_activator = RequestActivator.new(@model)
     if request_activator.save
-      publish(:request_update, request_activator.async)
       render json: request_activator.public, status: :ok
     else
       render_validation_error(request_activator)
@@ -52,7 +48,6 @@ class RequestsController < ApplicationController
     @model = Request.new(query_params).extend(RequestView)
     @model.user = current_user
     if @model.save
-      publish(:request_create, @model.async)
       render json: @model.recursive, status: :created
     else
       render_validation_error(@model)
@@ -63,7 +58,6 @@ class RequestsController < ApplicationController
   # PATCH/PUT /request/1
   def update
     if @model.update(query_params)
-      publish(:request_update, @model.async)
       render json: @model.public, status: :ok
     else
       render_validation_error(@model)
@@ -74,7 +68,6 @@ class RequestsController < ApplicationController
   # DELETE /request/1
   def destroy
     @model.destroy
-    publish(:request_destroy, @model.async)
     render status: :no_content
   end
 

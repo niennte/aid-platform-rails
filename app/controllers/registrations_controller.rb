@@ -1,16 +1,12 @@
 # override default Devise registrations controller
 # so as to be able to customize it
 class RegistrationsController < Devise::RegistrationsController
-  include Wisper::Publisher
-  subscribe(JobDispatcher.new, async: Rails.env.production?)
-
   respond_to :json
 
   def create
     build_resource(sign_up_params)
     resource.save
     if resource.errors.empty?
-      publish :user_create
       # sign in user and return the token
       if resource.active_for_authentication?
         sign_in(resource_name, resource)
@@ -19,11 +15,6 @@ class RegistrationsController < Devise::RegistrationsController
     else
       validation_error(resource)
     end
-  end
-
-  def destroy
-    super
-    publish :user_destroy
   end
 
   private

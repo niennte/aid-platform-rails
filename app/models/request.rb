@@ -1,4 +1,9 @@
 class Request < ApplicationRecord
+  include Wisper::Publisher
+  subscribe(JobDispatcher.new, async: Rails.env.production?)
+  after_commit :publish_created, on: :create
+  after_commit :publish_updated, on: :update
+  after_commit :publish_destroyed, on: :destroy
 
   enum category: [:one_time_task, :material_need]
   enum status: [:active, :pending, :closed]
@@ -81,10 +86,22 @@ class Request < ApplicationRecord
   def coordinates_changed?
     if self.address_changed?
       unless self.lat_changed? || self.lng_changed?
-        self.errors.add(:address, 'cannot be geo-located. Try to be more specific')
+        self.errors.add(:address, 'cannot be geo-located. Please try to be more specific')
         return false
       end
     end
     true
+  end
+
+  def publish_created
+    publish(:request_create, self.extend(RequestView).async)
+  end
+
+  def publish_updated
+    publish(:request_update, self.extend(RequestView).async)
+  end
+
+  def publish_destroyed
+    publish(:request_destroy, self.extend(RequestView).async)
   end
 end

@@ -3,11 +3,14 @@ class MessageDispatch < ApplicationRecord
   subscribe(JobDispatcher.new, async: Rails.env.production?)
 
   # only call callback if the is_read attribute has actually been updated
-  after_commit :publish_inbox_update,
+  after_commit :publish_inbox_update, on: :update,
      if: proc { |record|
        record.previous_changes.key?(:is_read) &&
            record.previous_changes[:is_read].first != record.previous_changes[:is_read].last
      }
+  after_commit :publish_destroyed, on: :destroy,
+     unless: proc { |record| record.is_read }
+  after_commit :handle_created, on: :create
 
   validates :user, presence: true
   validates :message, presence: true
@@ -40,5 +43,13 @@ messages.body as message_body")
     else
       publish(:inbox_unread_add, user_id)
     end
+  end
+
+  def publish_destroyed
+    publish(:inbox_unread_remove, user_id)
+  end
+
+  def handle_created
+    publish(:inbox_unread_add, user_id)
   end
 end

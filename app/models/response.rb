@@ -1,8 +1,10 @@
 class Response < ApplicationRecord
   include Wisper::Publisher
   subscribe(RequestStatusPolicy.new, async: Rails.env.production?)
-  # publish response creation
-  after_commit :apply_request_policy, on: :create
+  subscribe(JobDispatcher.new, async: Rails.env.production?)
+  # announce response creation to listeners
+  after_commit :publish_created, on: :create
+  after_commit :publish_destroyed, on: :destroy
 
   enum status: [:posted, :delivered]
 
@@ -34,9 +36,13 @@ class Response < ApplicationRecord
 
   private
 
-  def apply_request_policy
-    # "fire and forget"
-    # call the dispatcher method to update request status if rules apply
+  def publish_created
+    publish :response_create
+    publish(:response_new_notify, self.extend(ResponseView).async)
     publish(:apply_to_new_response, request_id)
+  end
+
+  def publish_destroyed
+    publish :response_destroy
   end
 end

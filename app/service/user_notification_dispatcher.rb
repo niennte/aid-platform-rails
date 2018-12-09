@@ -5,6 +5,15 @@ class UserNotificationDispatcher
   def initialize(user_id)
     @errors = {}
     @system_user = User.find_by username: 'AidPlatform'
+    if @system_user.nil?
+      User.create!(
+       username: 'AidPlatform',
+       email: ENV['GMAIL_USERNAME'],
+       password: ENV['DEVISE_JWT_SECRET_KEY'],
+       password_confirmation: ENV['DEVISE_JWT_SECRET_KEY']
+    )
+      @system_user = User.find_by username: 'AidPlatform'
+    end
     @user_id = user_id
   end
 

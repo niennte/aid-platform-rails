@@ -86,6 +86,16 @@ class RedisClient
     $redis.decr('members')
   end
 
+  def push_response_incr
+    # increment redis response counter
+    $redis.incr('response')
+  end
+
+  def push_response_decr
+    # decrement redis response counter
+    $redis.decr('response')
+  end
+
   def push_fulfillment_incr
     # increment redis fulfillments counter
     $redis.incr('fulfilled')
