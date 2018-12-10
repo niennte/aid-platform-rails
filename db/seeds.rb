@@ -12,6 +12,8 @@ if $redis.nil?
   $redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 end
 
+RedisClient.new.init_store
+
 # create system user
 system_user = User.find_by username: 'AidPlatform'
 if system_user.nil?

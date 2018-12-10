@@ -1,12 +1,15 @@
 class RedisClient
 
-  # TODO: Redis push methods should go into own class
-  # pushing to the "redis geo list":
-  # geo list is a flat snapshot of the current state of the database
-  # with geospacial attributes;
-  # redis geospacial queries will take a significant
-  # chunk of the heavy lifting
-  # off the API and Postgre
+  def init_store
+    $redis.flushall
+    $redis.set 'members', -1
+    $redis.incr 'members'
+    $redis.set 'fulfilled', -1
+    $redis.incr 'fulfilled'
+    $redis.set 'response', -1
+    $redis.incr 'response'
+  end
+
   def push_request_activate(request)
     $redis.geoadd(
         'requests:locations',
@@ -14,32 +17,33 @@ class RedisClient
         request[:location][:lat],
         request[:name],
     )
+
     # active request quick lookup
-    # $redis.hmset(
-    #     "requests:data:request:#{request[:name]}",
-    #     'type',
-    #     request[:category],
-    #     'userId',
-    #     request[:user][:userId],
-    #     'userName',
-    #     request[:user][:userName],
-    #     'lat',
-    #     request[:location][:lat],
-    #     'lng',
-    #     request[:location][:lng],
-    #     'title',
-    #     request[:title],
-    #     'description',
-    #     request[:description],
-    #     'address',
-    #     request[:fullAddress],
-    #     'city',
-    #     request[:city],
-    #     'postalCode',
-    #     request[:postalCode],
-    #     'country',
-    #     request[:country]
-    # )
+    $redis.hmset(
+        "requests:data:request:#{request[:name]}",
+        'type',
+        request[:category],
+        'userId',
+        request[:user][:userId],
+        'userName',
+        request[:user][:userName],
+        'lat',
+        request[:location][:lat],
+        'lng',
+        request[:location][:lng],
+        'title',
+        request[:title],
+        'description',
+        request[:description],
+        'address',
+        request[:fullAddress],
+        'city',
+        request[:city],
+        'postalCode',
+        request[:postalCode],
+        'country',
+        request[:country]
+    )
   end
 
   # remove from the "redis geo list"
