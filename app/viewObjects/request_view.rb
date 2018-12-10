@@ -69,7 +69,7 @@ module RequestView
         location: location,
         created: created_at,
         updated: updated_at,
-        type: category,
+        category: category,
         status: status
     }
   end
