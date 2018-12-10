@@ -54,8 +54,8 @@ center_point = { lat: 43.646791, lng: -79.526704 }
   until request.valid? do
     address = Geocoder.search(
       [
-        center_point[:lat] + rand(-5.00..5.00),
-        center_point[:lng] + rand(-5.00..5.00)
+        center_point[:lat] + (rand(-5.00..5.00) / 10),
+        center_point[:lng] + (rand(-5.00..5.00) / 10)
       ]
     ).first.address
     request.address = address
