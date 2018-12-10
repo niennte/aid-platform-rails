@@ -17,13 +17,12 @@ class Response < ApplicationRecord
   has_one :fulfillment
 
   def self.with_fulfillment
-    eager_load(:fulfillment)
+    eager_load([:request, {:request => :fulfillment}])
   end
 
   def self.with_request
     joins(:request).eager_load([:request, {:request => :user}])
   end
-
 
   def self.with_user
     withUser

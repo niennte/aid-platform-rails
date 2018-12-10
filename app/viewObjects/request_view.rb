@@ -73,4 +73,26 @@ module RequestView
         status: status
     }
   end
+
+  def recursive_with_fulfillment
+    {
+        id: id,
+        user: {
+            userId: user.id,
+            userName: user.username
+        },
+        name: name,
+        title: title,
+        description: description,
+        fullAddress: full_address,
+        zip: postal_code,
+        location: location,
+        created: created_at,
+        updated: updated_at,
+        type: category,
+        status: status,
+        fulfillment: fulfillment
+    }
+  end
+
 end

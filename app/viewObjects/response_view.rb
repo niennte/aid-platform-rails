@@ -13,10 +13,7 @@ module ResponseView
         requestId: request_id,
         posted: created_at,
         message: message,
-        status: status,
-        fulfillment: fulfillment ?
-            fulfillment.extend(FulfillmentView).list :
-            nil
+        status: status
     }
   end
 
@@ -29,13 +26,10 @@ module ResponseView
     {
         id: id,
         user_id: user_id,
-        request: request.extend(RequestView).recursive,
+        request: request.extend(RequestView).recursive_with_fulfillment,
         posted: created_at,
         message: message,
-        status: status,
-        fulfillment: fulfillment ?
-            fulfillment.extend(FulfillmentView).list :
-            nil
+        status: status
     }
   end
 
@@ -46,13 +40,10 @@ module ResponseView
         status: status,
         posted: created_at,
         postedBy: {
-            id: user.id,
-            userName: user.username
+          id: user.id,
+          userName: user.username
         },
-        request: request.extend(RequestView).public,
-        fulfillment: fulfillment ?
-            fulfillment.extend(FulfillmentView).list :
-            nil
+        request: request.extend(RequestView).recursive_with_fulfillment
     }
   end
 end
