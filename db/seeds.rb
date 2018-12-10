@@ -40,7 +40,7 @@ center_point = { lat: 43.646791, lng: -79.526704 }
 1.upto(50) do |i|
   user = User.find(rand(User.first.id..User.last.id))
   address = nil
-  Request.new(
+  request = Request.new(
     title: Faker::Lorem.sentence,
     description: Faker::Lorem.paragraph(8),
     address: address,
@@ -58,6 +58,7 @@ center_point = { lat: 43.646791, lng: -79.526704 }
         center_point[:lng] + rand(-5.00..5.00)
       ]
     ).first.address
+    request.address = address
   end
   request.save
 end
