@@ -39,8 +39,8 @@ module ResponseView
         message: message,
         status: status,
         posted: created_at,
-        postedBy: {
-          id: user.id,
+        user: {
+          userId: user.id,
           userName: user.username
         },
         request: request.extend(RequestView).recursive_with_fulfillment
