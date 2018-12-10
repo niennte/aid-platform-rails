@@ -100,8 +100,8 @@ module RequestWithResponsesView
       updated: updated_at,
       type: category,
       status: status,
-      responses: responses,
-      fulfillment: fulfillment,
+      responses: responses.map {|response| response.extend(ResponseView).with_user_detail },
+      fulfillment: fulfillment ? fulfillment.extend(FulfillmentView).recursive : {},
       fulfillmentPostedBy: fulfillment_posted_by
     }
   end

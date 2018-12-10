@@ -91,7 +91,7 @@ module RequestView
         updated: updated_at,
         type: category,
         status: status,
-        fulfillment: fulfillment
+        fulfillment: fulfillment ? fulfillment.extend(FulfillmentView).with_user_detail : {}
     }
   end
 

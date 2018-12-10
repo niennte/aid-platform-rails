@@ -33,7 +33,11 @@ class RequestsController < ApplicationController
   # GET /request/1
   def show
     # Needs another model?
-    @model = Request.with_user.with_fulfillment.find(params[:id])
+    @model = Request
+                 .with_user
+                 .with_fulfillment
+                 .with_responses
+                 .find(params[:id])
     is_own = @model.user_id == current_user.id
     if @model
       @model.extend(RequestWithResponsesView)

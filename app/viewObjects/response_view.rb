@@ -33,6 +33,19 @@ module ResponseView
     }
   end
 
+  def with_user_detail
+    {
+        id: id,
+        message: message,
+        status: status,
+        posted: created_at,
+        user: {
+            userId: user.id,
+            userName: user.username
+        }
+    }
+  end
+
   def recursive
     {
         id: id,

@@ -63,7 +63,11 @@ class Request < ApplicationRecord
   end
 
   def self.with_fulfillment
-    eager_load(:fulfillment)
+    eager_load([:fulfillment, {:fulfillment => :user}])
+  end
+
+  def self.with_responses
+    eager_load([:responses, {:responses => :user}])
   end
 
   def self.all_active

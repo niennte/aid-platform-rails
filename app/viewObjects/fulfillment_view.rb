@@ -27,13 +27,30 @@ module FulfillmentView
     }
   end
 
+  def with_user_detail
+    {
+        id: id,
+        requestId: request.id,
+        responseId: response.id,
+        posted: created_at,
+        postedBy: {
+            userId: user.id,
+            userName: user.username
+        },
+        message: message
+    }
+  end
+
   def recursive
     {
         id: id,
-        requestId: request,
+        request: request,
         response: response,
         posted: created_at,
-        postedBy: user,
+        postedBy: {
+            userId: user.id,
+            userName: user.username
+        },
         message: message
     }
   end
