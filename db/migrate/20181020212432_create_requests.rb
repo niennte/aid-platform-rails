@@ -4,7 +4,7 @@ class CreateRequests < ActiveRecord::Migration[5.2]
 
       t.belongs_to :user, foreign_key: {on_delete: :cascade}, null: false
       t.string :title, :limit => 100, null: false
-      t.text :description, :limit => 500, null: false
+      t.text :description, :limit => 300, null: false
       t.string :address, null: false
       t.float :latitude
       t.float :longitude

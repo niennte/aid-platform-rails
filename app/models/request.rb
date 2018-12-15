@@ -10,7 +10,7 @@ class Request < ApplicationRecord
 
   validates :title, presence: true, length: { maximum: 100, message: 'cannot be longer than 100 characters.'}
 
-  validates :description, presence: true, length: { maximum: 500, message: 'cannot be longer than 500 characters.'}
+  validates :description, presence: true, length: { maximum: 300, message: 'cannot be longer than 300 characters.'}
 
   validates :address, presence: true
 
