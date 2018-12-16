@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_26_183139) do
+ActiveRecord::Schema.define(version: 2018_12_15_215559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "first_name", limit: 100, null: false
+    t.string "last_name", limit: 100, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "pic_file_name"
+    t.string "pic_content_type"
+    t.bigint "pic_file_size"
+    t.datetime "pic_updated_at"
+    t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
 
   create_table "fulfillments", force: :cascade do |t|
     t.bigint "response_id", null: false
@@ -104,6 +117,7 @@ ActiveRecord::Schema.define(version: 2018_10_26_183139) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "accounts", "users", on_delete: :cascade
   add_foreign_key "fulfillments", "requests", on_delete: :cascade
   add_foreign_key "fulfillments", "responses", on_delete: :cascade
   add_foreign_key "fulfillments", "users", on_delete: :restrict

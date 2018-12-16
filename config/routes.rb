@@ -12,6 +12,11 @@ Rails.application.routes.draw do
                  registrations: 'registrations',
                  passwords: 'passwords'
              }
+  get '/account', to: 'accounts#show'
+  post '/account', to: 'accounts#create'
+  delete '/account', to: 'accounts#destroy'
+  patch '/account', to: 'accounts#update'
+  put '/account', to: 'accounts#update'
 
   scope '/api/v1' do
     resources :requests, path: :request

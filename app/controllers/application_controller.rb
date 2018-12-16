@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   AuthenticationError = Class.new(Exceptions::AuthenticationError)
   ForbiddenError = Class.new(Exceptions::ForbiddenError)
+  ResourceNotFoundError = Class.new(Exceptions::ResourceNotFoundError)
 
   rescue_from ApplicationController::AuthenticationError do |exception|
     render json: {
@@ -33,6 +34,22 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
+    render json: {
+        errors: [
+            {
+                status: '404',
+                title: 'Not found',
+                detail: {
+                    'NO_RESULT': 'The resource you requested doesn\'t exist.',
+                    message: exception.message,
+                },
+                code: 'NO_RESULT'
+            }
+        ]
+    }, status: :not_found
+  end
+
+  rescue_from ApplicationController::ResourceNotFoundError do |exception|
     render json: {
         errors: [
             {

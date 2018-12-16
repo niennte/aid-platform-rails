@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :requests
   has_many :responses
   has_many :fulfillments
+  has_one :account
 
   validates :username, presence: true, uniqueness: true
   validates_presence_of :password_confirmation, :on => :create
