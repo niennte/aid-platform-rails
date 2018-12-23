@@ -7,13 +7,15 @@ module AccountView
     }
   end
 
+  def async
+    public.deep_dup
+  end
+
   def public
     {
+      user_id: user_id,
       first_name: first_name,
       last_name: last_name,
-      pic_square: pic.url(:square),
-      pic_thumb: pic.url(:thumb),
-      pic_medium: pic.url(:medium),
       pic_url: pic.url
     }
   end

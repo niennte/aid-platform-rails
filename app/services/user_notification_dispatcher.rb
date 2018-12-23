@@ -44,6 +44,19 @@ Great, your request '#{request_title}' has received responses from 5 different v
     @errors == 0
   end
 
+  def report_account_verification(account)
+    message_dispatch = MessageDispatcher.new({
+       sender_id: @system_user.id,
+       recipient_id: @user_id,
+       subject: 'Thank you for verifying your account!',
+       body: "Thank you #{account[:first_name]} #{account[:last_name]}. Your account has been verified."
+                                             })
+    unless message_dispatch.save
+      @errors = message_dispatch.errors
+    end
+    @errors == 0
+  end
+
   def report_fulfilled(request, response)
     message_dispatch = MessageDispatcher.new({
        sender_id: @system_user.id,

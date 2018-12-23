@@ -91,17 +91,15 @@ class JobDispatcher
         .report_fulfilled(fulfillment[:requestId], fulfillment[:responseId])
   end
 
+  def account_verification_notify(account)
+    UserNotificationDispatcher
+        .new(account[:user_id])
+        .report_account_verification(account)
+  end
 
   private
 
-  # Logic pertaining to the Redis cache
-
-  # pushing "activated" requests to the "redis geo list":
-  # geo list is a flat snapshot of the current state of the database
-  # with geospacial attributes;
-  # redis geospacial queries will take a significant
-  # chunk of the heavy lifting
-  # off the API and Postgre
+  # Logic pertaining to the Redis lookup
   def push_request_activate(request)
     # active request geolocation and lookup
     @redis_client.push_request_activate(request)
