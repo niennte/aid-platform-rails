@@ -10,7 +10,7 @@
 - [Why would I want to build ~~anything as crazy as that~~ an abstract prototype?](https://github.com/niennte/aid-platform/wiki#why-would-i-want-to-build-anything-as-crazy-as-that-an-abstract-prototype)
 
 #### Live demo
-- [is here](https://infinite-sierra-74007.herokuapp.com/) (please bear wutg two heroku instances waking up)
+- [is here](https://infinite-sierra-74007.herokuapp.com/) (please bear with two heroku instances waking up)
 
 #### Initial setup
 - rbenv
