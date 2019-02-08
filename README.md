@@ -102,6 +102,54 @@ Scaling dynos... done, now running web at 1:Free
 ```
 
 #
+Third-party services
+
+
+
+#
+###### "ID" upload relies on AWS S3 storage service.
+
+1) Get an AWS account and create and S3 bucket. Make note of the AWS region. Create a user and obtain AWS Access key and secret.
+
+2) Run
+dev:
+
+$ \
+S3_BUCKET_NAME=[your AWS S3 bucket name, no quotes] \
+AWS_ACCESS_KEY_ID=[AWS access key] \
+AWS_REGION =[AWS region] \
+AWS_SECRET_ACCESS_KEY =[AWS secret] \
+rails server
+
+
+prod: 
+$ heroku config:set S3_BUCKET_NAME = [your AWS S3 bucket name, no quotes]
+$ heroku config:set AWS_ACCESS_KEY_ID = [AWS access key]
+$ heroku config:set AWS_REGION = [AWS region]
+$ heroku config:set AWS_SECRET_ACCESS_KEY = [AWS secret]
+
+#
+###### The user "lost password" functionality relies on Google smtp.
+
+1) Make sure to allow "less secure apps" on the Google account you chose to use for emailing
+
+2) Run
+dev:
+
+$ \
+GMAIL_PASSWORD=[your account's Gmail password, no quotes] \
+GMAIL_USERNAME=[your Gmail email address] \
+rails server
+
+prod: 
+$ heroku config:set GMAIL_PASSWORD = [your account's Gmail password, no quotes]
+$ heroku config:set GMAIL_USERNAME = [your Gmail email address]
+
+
+
+
+
+#
 Setup Redis notifications for the [interesting events (all of the keyspace)](https://redis.io/topics/notifications):
 ```
 config set notify-keyspace-events KA
