@@ -10,7 +10,7 @@
 - [Why would I want to build ~~anything as crazy as that~~ an abstract prototype?](https://github.com/niennte/aid-platform/wiki#why-would-i-want-to-build-anything-as-crazy-as-that-an-abstract-prototype)
 
 #### Live demo
-- [is here (please be patient with two heroku instances to wake up)](https://infinite-sierra-74007.herokuapp.com/)
+- [is here](https://infinite-sierra-74007.herokuapp.com/) (please bear wutg two heroku instances waking up)
 
 #### Initial setup
 - rbenv
@@ -100,28 +100,4 @@ Setup Redis notifications for the [interesting events (all of the keyspace)](htt
 ```
 config set notify-keyspace-events KA
 ```
-#
 
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
