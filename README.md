@@ -1,7 +1,14 @@
-# README
+# Aid Platform
+
+### What is it?
+
+A prototype of a one-to-many match making platform, based on geolocation and offering to members an ability to either publish a "request" or respond / volunteer for a "request" published by another member. 
+
+![](https://s3.amazonaws.com/quod.erat.demonstrandum/portfolio/img/aid-platform/Screen+Shot+2019-02-08+at+12.10.53.png)
+
+[Live demo](https://infinite-sierra-74007.herokuapp.com/)
 
 #### Documentation / Wiki
-- [What is it?](https://github.com/niennte/aid-platform/wiki#what-is-it)
 - [What does it do?](https://github.com/niennte/aid-platform/wiki#what-does-it-do)
 - [Stack and architecture](https://github.com/niennte/aid-platform/wiki#stack-and-architecture)
 - [Is it perfect?](https://github.com/niennte/aid-platform/wiki#is-it-perfect)
