@@ -89,10 +89,10 @@ $ rails secret
 [rails-generated-secret]
 
 
-dev:
+# dev:
 $ DEVISE_JWT_SECRET_KEY=[rails-generated-secret] rails server
 
-prod: 
+# prod: 
 $ heroku config:set DEVISE_JWT_SECRET_KEY = [rails-generated-secret] 
 
 # activate the app
@@ -112,7 +112,8 @@ Third-party services
 1) Get an AWS account and create and S3 bucket. Make note of the AWS region. Create a user and obtain AWS Access key and secret.
 
 2) Run
-dev:
+```
+# dev:
 
 $ \
 S3_BUCKET_NAME=[your AWS S3 bucket name, no quotes] \
@@ -122,11 +123,12 @@ AWS_SECRET_ACCESS_KEY =[AWS secret] \
 rails server
 
 
-prod: 
+# prod: 
 $ heroku config:set S3_BUCKET_NAME = [your AWS S3 bucket name, no quotes]
 $ heroku config:set AWS_ACCESS_KEY_ID = [AWS access key]
 $ heroku config:set AWS_REGION = [AWS region]
 $ heroku config:set AWS_SECRET_ACCESS_KEY = [AWS secret]
+```
 
 #
 ###### The user "lost password" functionality relies on Google smtp.
@@ -134,18 +136,19 @@ $ heroku config:set AWS_SECRET_ACCESS_KEY = [AWS secret]
 1) Make sure to allow "less secure apps" on the Google account you chose to use for emailing
 
 2) Run
-dev:
+```
+# dev:
 
 $ \
 GMAIL_PASSWORD=[your account's Gmail password, no quotes] \
 GMAIL_USERNAME=[your Gmail email address] \
 rails server
 
-prod: 
+# prod: 
 $ heroku config:set GMAIL_PASSWORD = [your account's Gmail password, no quotes]
 $ heroku config:set GMAIL_USERNAME = [your Gmail email address]
 
-
+```
 
 
 
