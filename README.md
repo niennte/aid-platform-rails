@@ -1,14 +1,16 @@
 # README
 
-#### Wiki
+#### Documentation / Wiki
 - [What is it?](https://github.com/niennte/aid-platform/wiki#what-is-it)
 - [What does it do?](https://github.com/niennte/aid-platform/wiki#what-does-it-do)
-- [Live demo](https://infinite-sierra-74007.herokuapp.com/)
 - [Stack and architecture](https://github.com/niennte/aid-platform/wiki#stack-and-architecture)
 - [Is it perfect?](https://github.com/niennte/aid-platform/wiki#is-it-perfect)
 - [Is it any good?](https://github.com/niennte/aid-platform/wiki#is-it-any-good)
 - [What is it good for?](https://github.com/niennte/aid-platform/wiki#what-is-it-good-for)
 - [Why would I want to build ~~anything as crazy as that~~ an abstract prototype?](https://github.com/niennte/aid-platform/wiki#why-would-i-want-to-build-anything-as-crazy-as-that-an-abstract-prototype)
+
+#### Live demo
+- [is here (please be patient with two heroku instances to wake up)](https://infinite-sierra-74007.herokuapp.com/)
 
 #### Initial setup
 - rbenv
