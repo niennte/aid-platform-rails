@@ -1,12 +1,11 @@
-# Aid Platform
-
-### What is it?
+# Community Aid Platform
 
 A prototype of a one-to-many match making platform, based on geolocation and offering to members an ability to either publish a "request" or respond / volunteer for a "request" published by another member. 
 
 ![](https://s3.amazonaws.com/quod.erat.demonstrandum/portfolio/img/aid-platform/Screen+Shot+2019-02-08+at+12.10.53.png)
 
-[Live demo](https://infinite-sierra-74007.herokuapp.com/)
+- [Live demo](https://infinite-sierra-74007.herokuapp.com/)
+- [More screenshots](https://github.com/niennte/aid-platform/wiki#screenshots)
 
 #### Documentation / Wiki
 - [What does it do?](https://github.com/niennte/aid-platform/wiki#what-does-it-do)
